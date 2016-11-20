@@ -8,7 +8,7 @@ float in[] = { 100.00, 100.39, 100.78, 101.17, 101.56, 101.95, 102.34, 102.73, 1
                127.08, 127.46, 127.84, 128.22, 128.61, 128.99, 129.37, 129.75, 130.13, 130.52 };
 
 // known resistance in voltage divider
-int R1 = 244;
+int R1 = 341;
 
 float MultiMap(float val, float* _in, uint8_t size)
 {

@@ -1,3 +1,11 @@
+/* Demonstration sketch for PCF8574T I2C LCD Backpack 
+Uses library from https://bitbucket.org/fmalpartida/new-liquidcrystal/downloads GNU General Public License, version 3 (GPL-3.0) */
+#include <Wire.h>
+#include <LCD.h>
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C  lcd(0x27,2,1,0,4,5,6,7); // 0x27 is the I2C bus address for an unmodified backpack
+
 float in[] = { 100.00, 100.39, 100.78, 101.17, 101.56, 101.95, 102.34, 102.73, 103.12, 103.51,
                103.90, 104.29, 104.68, 105.07, 105.46, 105.85, 106.24, 106.63, 107.02, 107.40,
                107.79, 108.18, 108.57, 108.96, 109.35, 109.73, 110.12, 110.51, 110.90, 111.29,
@@ -8,7 +16,7 @@ float in[] = { 100.00, 100.39, 100.78, 101.17, 101.56, 101.95, 102.34, 102.73, 1
                127.08, 127.46, 127.84, 128.22, 128.61, 128.99, 129.37, 129.75, 130.13, 130.52 };
 
 // known resistance in voltage divider
-int R1 = 341;
+int Rref = 341;
 
 float MultiMap(float val, float* _in, uint8_t size)
 {
@@ -32,29 +40,29 @@ float MultiMap(float val, float* _in, uint8_t size)
 }
 
 void setup() {
-  // put your setup code here, to run once:
+  // activate LCD module
+  lcd.begin (16,2); // for 16 x 2 LCD module
+  lcd.setBacklightPin(3,POSITIVE);
+  lcd.setBacklight(HIGH);
+  
   Serial.begin(9600);
 }
 void loop() {
-  // put your main code here, to run repeatedly:
-  int pt100 = analogRead(A0);
   
-  float Vout = pt100 * (5.0 / 1023.0);
-  float R2 = R1 * 1/(5.0/Vout - 1);
-
-  float c =  MultiMap(R2,in,80);
-
-  Serial.print("Voltage: ");
-  Serial.print(Vout);
-  Serial.println(" Volts");
-
-  Serial.print("Resistance: ");
-  Serial.print(R2);
-  Serial.println(" Ohm");
+  int sensorOut = analogRead(A0);
   
-  Serial.print("Temperature: ");
-  Serial.print(c);
-  Serial.println(" C");
+  float Vout = sensorOut * (5.0 / 1023.0);
+  float Rpt = Rref * 1/(5.0/Vout - 1);
+  float temp =  MultiMap(Rpt,in,80);
+
+  lcd.home ();                // set cursor to 0,0
+  lcd.print("Voltage: ");
+  lcd.print(Vout);
+  lcd.print(" V");
+  lcd.setCursor (0,1);        // go to start of 2nd line
+  lcd.print("Temp: ");
+  lcd.print(temp);
+  lcd.print(" C");
 
   delay(1000);
 }

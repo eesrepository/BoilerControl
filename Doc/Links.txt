@@ -1,0 +1,6 @@
+http://forum.arduino.cc/index.php?topic=198449.0
+http://stackoverflow.com/questions/30012866/how-to-read-temperature-using-arduino-uno-board-with-pt100-rtd-sensor
+
+
+http://iitg.vlab.co.in/?sub=61&brch=174&sim=1035&cnt=1
+http://home.hit.no/~hansha/documents/subjects/SCE4206/lab/arduino/Arduino.pdf
